@@ -1,71 +1,63 @@
-import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+'use strict';
 
-export interface Props {
-  name: string;
-  enthusiasmLevel?: number;
+import React, { Component } from 'react';
+
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Linking
+} from 'react-native';
+
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import { RNCamera } from 'react-native-camera';
+
+export default class App extends Component {
+  onSuccess = (e:any) => {
+    Linking.openURL(e.data).catch(err =>
+      console.error('An error occured', err)
+    );
+  };
+
+  render() {
+    return (
+      <QRCodeScanner
+        onRead={this.onSuccess}
+        // flashMode={RNCamera.Constants.FlashMode.torch}
+      showMarker={true}
+        topContent={
+          <Text style={styles.centerText}>
+            Go to{' '}
+            <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
+            your computer and scan the QR code.
+          </Text>
+        }
+        bottomContent={
+          <TouchableOpacity style={styles.buttonTouchable}>
+            <Text style={styles.buttonText}>OK. Got it!</Text>
+          </TouchableOpacity>
+        }
+      />
+    );
+  }
 }
 
-const Hello: React.FC<Props> = (props) => {
-  const [enthusiasmLevel, setEnthusiasmLevel] = React.useState(
-    props.enthusiasmLevel
-  );
-
-  const onIncrement = () =>
-    setEnthusiasmLevel((enthusiasmLevel || 0) + 1);
-  const onDecrement = () =>
-    setEnthusiasmLevel((enthusiasmLevel || 0) - 1);
-
-  const getExclamationMarks = (numChars: number) =>
-    Array(numChars + 1).join('!');
-  return (
-    <View style={styles.root}>
-      <Text style={styles.greeting}>
-        Hello{' '}
-        {props.name + getExclamationMarks(enthusiasmLevel || 0)}
-      </Text>
-      <View style={styles.buttons}>
-        <View style={styles.button}>
-          <Button
-            title="-"
-            onPress={onDecrement}
-            accessibilityLabel="decrement"
-            color="red"
-          />
-        </View>
-        <View style={styles.button}>
-          <Button
-            title="+"
-            onPress={onIncrement}
-            accessibilityLabel="increment"
-            color="blue"
-          />
-        </View>
-      </View>
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
-  root: {
-    alignItems: 'center',
-    alignSelf: 'center'
-  },
-  buttons: {
-    flexDirection: 'row',
-    minHeight: 70,
-    alignItems: 'stretch',
-    alignSelf: 'center',
-    borderWidth: 5
-  },
-  button: {
+  centerText: {
     flex: 1,
-    paddingVertical: 0
+    fontSize: 18,
+    padding: 32,
+    color: '#777'
   },
-  greeting: {
-    color: '#999',
-    fontWeight: 'bold'
+  textBold: {
+    fontWeight: '500',
+    color: '#000'
+  },
+  buttonText: {
+    fontSize: 21,
+    color: 'rgb(0,122,255)'
+  },
+  buttonTouchable: {
+    padding: 16
   }
 });
-
-export default Hello;
