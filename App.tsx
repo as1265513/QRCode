@@ -25,6 +25,7 @@ export default class App extends Component {
         onRead={this.onSuccess}
         // flashMode={RNCamera.Constants.FlashMode.torch}
       showMarker={true}
+      
         topContent={
           <Text style={styles.centerText}>
             Go to{' '}
